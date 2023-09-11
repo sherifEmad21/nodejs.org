@@ -112,11 +112,13 @@ pipeline {
 
                         // def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
 
+                        // sed -e "s|DOCKER_IMG|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" node-deployment-template.yaml > node-deployment.yaml
 
                         sh """
                             
-                            sed -e "s|DOCKER_IMG|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" node-deployment-template.yaml > node-deployment.yaml
                             
+                            sed -e "s|DOCKER_IMG|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|SHA8AL|g" node-deployment-template.yaml > node-deployment.yaml
+
                             cat node-deployment.yaml
 
                         """
