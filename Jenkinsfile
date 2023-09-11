@@ -95,30 +95,26 @@ pipeline {
         //     }
         // }
 
-        // stage('Create Infrastructure'){
-        //     steps {
-        //         dir("./terraform"){
-        //             sh 'terraform init'
-        //             sh "terraform plan"
-        //             sh 'terraform destroy --auto-approve'
-        //             sh 'terraform apply --auto-approve'
-        //         }
-        //     }
-        // }
+        stage('Create Infrastructure'){
+            steps {
+                dir("./terraform"){
+                    sh 'terraform init'
+                    sh "terraform plan"
+                    sh 'terraform destroy --auto-approve'
+                    sh 'terraform apply --auto-approve'
+                }
+            }
+        }
 
         stage("Push to ECR"){
             steps {
                 dir("./script"){
                    script {
 
-                        // def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
+                        def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
 
-                        // sed -e "s|DOCKER_IMG|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" node-deployment-template.yaml > node-deployment.yaml
-
-                        sh """
-                            
-                            
-                            sed -e "s|DOCKER_IMG|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${MOD_DOCKER_IMAGE}|g" node-deployment-template.yaml > node-deployment.yaml
+                        sh """                            
+                            sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" node-deployment-template.yaml > node-deployment.yaml
 
                             cat node-deployment.yaml
 
@@ -126,12 +122,12 @@ pipeline {
 
 
 
-                        // sh """
-                        //     sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" pushToECR-template.sh > pushToECR.sh
-                        // """
+                        sh """
+                            sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" -e "s|MOD_DOCKER_IMG|${MOD_DOCKER_IMAGE}|g" pushToECR-template.sh > pushToECR.sh
+                        """
 
-                        // sh 'chmod +x pushToECR.sh'
-                        // sh "./pushToECR.sh"
+                        sh 'chmod +x pushToECR.sh'
+                        sh "./pushToECR.sh"
                    }
 
                 }
@@ -140,36 +136,36 @@ pipeline {
         }
 
 
-        // stage("Deploy to EKS") {
-        //     when {
-        //         branch 'dev'
-        //     }
-        //     steps {
-        //         dir("./script") {
-        //             script {
-        //                 def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
+        stage("Deploy to EKS") {
+            when {
+                branch 'dev'
+            }
+            steps {
+                dir("./script") {
+                    script {
+                        def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
                         
-        //                 sh """
-        //                     sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" deploy-template.sh > deploy.sh
-        //                 """
-        //                 sh "chmod +x deploy.sh"
-        //                 sh "./deploy.sh"
-        //             }
-        //         }
-        //     }
+                        sh """
+                            sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|ECR_REPO|${ecr_repo}|g" deploy-template.sh > deploy.sh
+                        """
+                        sh "chmod +x deploy.sh"
+                        sh "./deploy.sh"
+                    }
+                }
+            }
 
-        //     post {
-        //         success {
-        //             echo "Successfully deployed to AWS"
-        //         }
+            post {
+                success {
+                    echo "Successfully deployed to AWS"
+                }
 
-        //         failure {
-        //             dir("./terraform") {
-        //                 sh 'terraform destroy --auto-approve'
-        //             }
-        //         }
-        //     }
-        // }
+                failure {
+                    dir("./terraform") {
+                        sh 'terraform destroy --auto-approve'
+                    }
+                }
+            }
+        }
 
         // stage("Smoke test on deployment") {
         //     when {

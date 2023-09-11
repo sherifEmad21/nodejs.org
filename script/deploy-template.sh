@@ -14,7 +14,7 @@ aws configure set aws_secret_access_key SECRET_KEY
 
 sudo chmod 666 /var/run/docker.sock
 
-aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ecr_repo
+aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ECR_REPO
 
 aws eks --region eu-west-3 update-kubeconfig --name eks
 

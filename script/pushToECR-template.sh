@@ -10,8 +10,6 @@ sudo chmod 666 /var/run/docker.sock
 
 aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ECR_REPO
 
-MOD_DOCKER_IMG=$(echo IMG_NAME | sed "s|:|-|g")
+docker tag IMG_NAME ECR_REPO:MOD_DOCKER_IMG
 
-docker tag IMG_NAME ECR_REPO:$MOD_DOCKER_IMG
-
-docker push ECR_REPO:$MOD_DOCKER_IMG
+docker push ECR_REPO:MOD_DOCKER_IMG
