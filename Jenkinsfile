@@ -84,16 +84,16 @@ pipeline {
         //     }
         // }
 
-        // stage('Pass the access keys to provider') {
-        //     steps {
-        //         dir("./terraform") {
-        //             sh """
-        //               sed -e "s|ACCESS_KEY_TO_REPLACE|${ACCESS_KEY}|g" -e "s|SECRET_KEY_TO_REPLACE|${SECRET_KEY}|g" terraformvar-template.txt > terraform.tfvars 
+        stage('Pass the access keys to provider') {
+            steps {
+                dir("./terraform") {
+                    sh """
+                      sed -e "s|ACCESS_KEY_TO_REPLACE|${ACCESS_KEY}|g" -e "s|SECRET_KEY_TO_REPLACE|${SECRET_KEY}|g" terraformvar-template.txt > terraform.tfvars 
 
-        //             """
-        //         }
-        //     }
-        // }
+                    """
+                }
+            }
+        }
 
         stage('Create Infrastructure'){
             steps {
