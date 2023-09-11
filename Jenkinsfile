@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         USER_CREDENTIALS = credentials('docker_account')
-        DOCKER_IMAGE = "node-docker:v2"
+        DOCKER_IMAGE = "node-docker:v2".replaceAll(':', '-')
         //  DOCKER_IMAGE = "node-docker:v${BUILD_ID}"
         DOCKER_USERNAME = "${USER_CREDENTIALS_USR}"
         DOCKER_PASSWORD = "${USER_CREDENTIALS_PSW}"
@@ -114,9 +114,8 @@ pipeline {
 
 
                         sh """
-                            MOD_DOCKER_IMG=\$(echo \${DOCKER_IMAGE} | sed "s|:|-|g")
-
-                            sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|SHA8AL|g" node-deployment-template.yaml > node-deployment.yaml
+                            
+                            sed -e "s|DOCKER_IMG|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" node-deployment-template.yaml > node-deployment.yaml
                             
                             cat node-deployment.yaml
 
