@@ -108,13 +108,18 @@ pipeline {
         stage("Push to ECR"){
             steps {
                 dir("./script"){
-                   
-                    sh """
-                        sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" pushToECR.sh
-                    """
+                   script {
 
-                    sh 'chmod +x pushToECR.sh'
-                    sh "./pushToECR.sh"
+                        def ecr_repo = sh(script: 'cd ../ECR && terraform output -raw ecr_url', returnStdout: true).trim()
+
+                        sh """
+                            sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" pushToECR.sh
+                        """
+
+                        sh 'chmod +x pushToECR.sh'
+                        sh "./pushToECR.sh"
+                   }
+
                 }
 
             }
