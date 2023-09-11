@@ -110,7 +110,7 @@ pipeline {
                 dir("./script"){
                    script {
 
-                        def ecr_repo = sh(script: 'cd ../ECR && terraform output -raw ecr_url', returnStdout: true).trim()
+                        def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
 
                         sh """
                             sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" pushToECR.sh
@@ -133,7 +133,7 @@ pipeline {
             steps {
                 dir("./script") {
                     script {
-                        def ecr_repo = sh(script: 'cd ../ECR && terraform output -raw ecr_url', returnStdout: true).trim()
+                        def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
                         
                         sh """
                             sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" deploy.sh
