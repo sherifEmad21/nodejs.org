@@ -87,7 +87,7 @@ pipeline {
             steps {
                 dir("./terraform") {
                     sh """
-                      sed -e "s|ACCESS_KEY_TO_REPLACE|${ACCESS_KEY}|g" -e "s|SECRET_KEY_TO_REPLACE|${SECRET_KEY}|g" provider.tf   
+                      sed -e "s|ACCESS_KEY_TO_REPLACE|${ACCESS_KEY}|g" -e "s|SECRET_KEY_TO_REPLACE|${SECRET_KEY}|g" terraform.tfvars 
 
                     """
                 }
