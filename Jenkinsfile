@@ -105,25 +105,37 @@ pipeline {
         //     }
         // }
 
-        // stage("Push to ECR"){
-        //     steps {
-        //         dir("./script"){
-        //            script {
+        stage("Push to ECR"){
+            steps {
+                dir("./script"){
+                   script {
 
-        //                 def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
+                        def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
 
-        //                 sh """
-        //                     sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" pushToECR-template.sh > pushToECR.sh
-        //                 """
 
-        //                 sh 'chmod +x pushToECR.sh'
-        //                 sh "./pushToECR.sh"
-        //            }
+                        sh """
+                            MOD_DOCKER_IMG=$(echo IMG_NAME | sed "s|:|-|g")
 
-        //         }
+                            sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|ecr_repo|g" node-deployment-template.yaml > node-deployment.yaml
+                            
+                            cat node-deployment.yaml
 
-        //     }
-        // }
+                        """
+
+
+
+                        // sh """
+                        //     sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" pushToECR-template.sh > pushToECR.sh
+                        // """
+
+                        // sh 'chmod +x pushToECR.sh'
+                        // sh "./pushToECR.sh"
+                   }
+
+                }
+
+            }
+        }
 
 
         stage("Deploy to EKS") {
@@ -136,20 +148,10 @@ pipeline {
                         def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
                         
                         sh """
-                            MOD_DOCKER_IMG=$(echo IMG_NAME | sed "s|:|-|g")
-
-                            sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|ecr_repo|g" node-deployment-template.yaml > node-deployment.yaml
-                            
-                            cat node-deployment.yaml
-
+                            sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" deploy-template.sh > deploy.sh
                         """
-
-
-                        // sh """
-                        //     sed -e "s|ACCESS_KEY|${ACCESS_KEY}|g" -e "s|SECRET_KEY|${SECRET_KEY}|g" -e "s|IMG_NAME|${DOCKER_IMAGE}|g" -e "s|ECR_REPO|${ecr_repo}|g" deploy-template.sh > deploy.sh
-                        // """
-                        // sh "chmod +x deploy.sh"
-                        // sh "./deploy.sh"
+                        sh "chmod +x deploy.sh"
+                        sh "./deploy.sh"
                     }
                 }
             }
