@@ -8,9 +8,9 @@
 
 # sudo apt install awscli -y
 
-aws configure set aws_access_key_id 
+aws configure set aws_access_key_id ACCESS_KEY
 
-aws configure set aws_secret_access_key 
+aws configure set aws_secret_access_key SECRET_KEY
 
 sudo chmod 666 /var/run/docker.sock
 
@@ -18,7 +18,7 @@ aws ecr get-login-password --region eu-west-3 | docker login --username AWS --pa
 
 aws eks --region eu-west-3 update-kubeconfig --name eks
 
-MOD_DOCKER_IMG=$(echo  | sed "s|:|-|g")
+MOD_DOCKER_IMG=$(echo IMG_NAME | sed "s|:|-|g")
 
 sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|ecr_repo|g" node-deployment-template.yaml > node-deployment.yaml
 
