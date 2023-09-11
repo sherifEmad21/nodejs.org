@@ -12,7 +12,7 @@ aws configure set aws_access_key_id
 
 aws configure set aws_secret_access_key 
 
-# sudo chmod 666 /var/run/docker.sock
+sudo chmod 666 /var/run/docker.sock
 
 aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ecr_repo
 
