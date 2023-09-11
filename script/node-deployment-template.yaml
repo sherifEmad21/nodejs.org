@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: node-container
-          image: ECR_IMG
+          image: ECR_REPO:DOCKER_IMG
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
