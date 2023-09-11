@@ -28,12 +28,10 @@ kind: Service
 metadata: 
   name: node-service
 spec:
-  type: NodePort
+  type: LoadBalancer  # Use LoadBalancer type to expose the service externally on AWS EKS
   selector:
     app: node-deployment
   ports:
     - port: 3000 # The port that the service is running on in the cluster
       targetPort: 3000 # The port exposed by the service
       protocol: TCP
-      nodePort: 32000  
-  
