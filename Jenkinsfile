@@ -5,7 +5,7 @@ pipeline {
         USER_CREDENTIALS = credentials('docker_account')
         DOCKER_IMAGE = "node-docker:v2"
         //  DOCKER_IMAGE = "node-docker:v${BUILD_ID}"
-        MOD_DOCKER_IMAGE="${DOCKER_IMAGE}".replaceAll(':', '-')
+        MOD_DOCKER_IMAGE = DOCKER_IMAGE.replace(":", "-")
         DOCKER_USERNAME = "${USER_CREDENTIALS_USR}"
         DOCKER_PASSWORD = "${USER_CREDENTIALS_PSW}"
 
