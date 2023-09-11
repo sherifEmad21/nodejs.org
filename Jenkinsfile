@@ -94,16 +94,16 @@ pipeline {
             }
         }
 
-        stage('Create Infrastructure'){
-            steps {
-                dir("./terraform"){
-                    sh 'terraform init'
-                    sh "terraform plan"
-                    sh 'terraform destroy --auto-approve'
-                    sh 'terraform apply --auto-approve'
-                }
-            }
-        }
+        // stage('Create Infrastructure'){
+        //     steps {
+        //         dir("./terraform"){
+        //             sh 'terraform init'
+        //             sh "terraform plan"
+        //             sh 'terraform destroy --auto-approve'
+        //             sh 'terraform apply --auto-approve'
+        //         }
+        //     }
+        // }
 
         stage("Push to ECR"){
             steps {
