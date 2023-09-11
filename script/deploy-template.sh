@@ -18,10 +18,6 @@ aws ecr get-login-password --region eu-west-3 | docker login --username AWS --pa
 
 aws eks --region eu-west-3 update-kubeconfig --name eks
 
-MOD_DOCKER_IMG=$(echo IMG_NAME | sed "s|:|-|g")
-
-sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|ecr_repo|g" node-deployment-template.yaml > node-deployment.yaml
-
 kubectl apply -f node-deployment.yaml
 
 # docker pull ecr_repo:$MOD_DOCKER_IMG
