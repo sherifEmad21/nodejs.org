@@ -110,13 +110,13 @@ pipeline {
                 dir("./script"){
                    script {
 
-                        def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
+                        // def ecr_repo = sh(script: 'cd ../terraform && terraform output -raw ecr_url', returnStdout: true).trim()
 
 
                         sh """
                             MOD_DOCKER_IMG=\$(echo \${DOCKER_IMAGE} | sed "s|:|-|g")
 
-                            sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|${ecr_repo}|g" node-deployment-template.yaml > node-deployment.yaml
+                            sed -e "s|DOCKER_IMG|${MOD_DOCKER_IMG}|g" -e "s|ECR_REPO|SHA8AL|g" node-deployment-template.yaml > node-deployment.yaml
                             
                             cat node-deployment.yaml
 
