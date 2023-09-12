@@ -102,7 +102,7 @@ resource "aws_eks_node_group" "nodes_general" {
   force_update_version = false
 
   # List of instance types associated with the EKS Node Group
-  instance_types = ["t3.micro"]
+  instance_types = ["t3.small"]
 
   labels = {
     role = "nodes-general"
