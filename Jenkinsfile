@@ -99,7 +99,7 @@ pipeline {
             steps {
                 dir("./script"){
                     sh "chmod +x public_key_gen.sh"
-                    sh "./pbulic_key_gen.sh"
+                    sh "./public_key_gen.sh"
                 }
             }
         }
