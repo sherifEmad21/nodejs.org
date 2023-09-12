@@ -93,10 +93,10 @@ resource "aws_eks_node_group" "nodes_general" {
 
   # Type of capacity associated with the EKS Node Group. 
   # Valid values: ON_DEMAND, SPOT
-  capacity_type = "ON_DEMAND"
+  # capacity_type = "ON_DEMAND"
 
-  # Disk size in GiB for worker nodes
-  disk_size = 20
+  # # Disk size in GiB for worker nodes
+  # disk_size = 20
 
   # Force version update if existing pods are unable to be drained due to a pod disruption budget issue.
   force_update_version = false
