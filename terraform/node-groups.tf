@@ -131,4 +131,37 @@ resource "aws_launch_template" "example" {
   instance_type          = "t3.small"
   vpc_security_group_ids = [ aws_security_group.test-sg.id ]
 
+  iam_instance_profile {
+    name = aws_iam_instance_profile.profile.name
+  }
+}
+
+
+// Instance profile
+resource "aws_iam_instance_profile" "profile" {
+  role = aws_iam_role.instance_profile.name
+}
+
+resource "aws_iam_role_policy_attachment" "attachment" {
+  role       = aws_iam_role.instance_profile.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+resource "aws_iam_role" "instance_profile" {
+  path               = "/"
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
 }
