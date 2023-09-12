@@ -104,9 +104,16 @@ resource "aws_eks_node_group" "nodes_general" {
   # List of instance types associated with the EKS Node Group
   instance_types = ["t3.small"]
 
-  launch_template {
-    id = aws_launch_template.example.id
-    version = aws_launch_template.example.latest_version
+  # launch_template {
+  #   id = aws_launch_template.example.id
+  #   version = aws_launch_template.example.latest_version
+  # }
+
+
+  # Add a remote_access block to specify the security group
+  remote_access {
+    ec2_ssh_key = aws_key_pair.eks_key.key_name  # Replace with your SSH key resource if needed
+    source_security_group_ids = [aws_security_group.test-sg.id]
   }
 
 
@@ -126,7 +133,7 @@ resource "aws_eks_node_group" "nodes_general" {
   ]
 }
 
-resource "aws_launch_template" "example" {
-  name_prefix            = "example-"
-  vpc_security_group_ids = [ aws_security_group.test-sg.id ]
-}
+# resource "aws_launch_template" "example" {
+#   name_prefix            = "example-"
+#   vpc_security_group_ids = [ aws_security_group.test-sg.id ]
+# }

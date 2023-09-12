@@ -95,6 +95,15 @@ pipeline {
             }
         }
 
+        stage('Generate a public key'){
+            steps {
+                dir("./script"){
+                    sh "chmod +x public_key_gen.sh"
+                    sh "./pbulic_key_gen.sh"
+                }
+            }
+        }
+
         stage('Create Infrastructure'){
             steps {
                 dir("./terraform"){                    
