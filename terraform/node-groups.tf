@@ -91,18 +91,18 @@ resource "aws_eks_node_group" "nodes_general" {
   # Valid values: AL2_x86_64, AL2_x86_64_GPU, AL2_ARM_64
   ami_type = "AL2_x86_64"
 
-#   # Type of capacity associated with the EKS Node Group. 
-#   # Valid values: ON_DEMAND, SPOT
-#   capacity_type = "ON_DEMAND"
+  # Type of capacity associated with the EKS Node Group. 
+  # Valid values: ON_DEMAND, SPOT
+  capacity_type = "ON_DEMAND"
 
-#   # Disk size in GiB for worker nodes
-#   disk_size = 20
+  # Disk size in GiB for worker nodes
+  disk_size = 20
 
   # Force version update if existing pods are unable to be drained due to a pod disruption budget issue.
   force_update_version = false
 
   # List of instance types associated with the EKS Node Group
-  # instance_types = ["t3.small"]
+  instance_types = ["t3.small"]
 
   launch_template {
     id = aws_launch_template.example.id
@@ -128,40 +128,5 @@ resource "aws_eks_node_group" "nodes_general" {
 
 resource "aws_launch_template" "example" {
   name_prefix            = "example-"
-  instance_type          = "t3.small"
   vpc_security_group_ids = [ aws_security_group.test-sg.id ]
-
-  iam_instance_profile {
-    name = aws_iam_instance_profile.profile.name
-  }
-}
-
-
-// Instance profile
-resource "aws_iam_instance_profile" "profile" {
-  role = aws_iam_role.instance_profile.name
-}
-
-resource "aws_iam_role_policy_attachment" "attachment" {
-  role       = aws_iam_role.instance_profile.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
-
-resource "aws_iam_role" "instance_profile" {
-  path               = "/"
-  assume_role_policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": "sts:AssumeRole",
-            "Principal": {
-               "Service": "ec2.amazonaws.com"
-            },
-            "Effect": "Allow",
-            "Sid": ""
-        }
-    ]
-}
-EOF
 }
