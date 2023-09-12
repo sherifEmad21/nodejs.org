@@ -97,7 +97,13 @@ pipeline {
 
         stage('Create Infrastructure'){
             steps {
-                dir("./terraform"){
+
+                dir("./script"){
+                    sh "chmod +x public_key_gen.sh"
+                    sh "./public_key_gen.sh"
+                }
+
+                dir("./terraform"){                    
                     sh 'terraform init'
                     sh "terraform plan"
                     sh 'terraform destroy --auto-approve'

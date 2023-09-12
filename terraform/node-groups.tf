@@ -102,7 +102,13 @@ resource "aws_eks_node_group" "nodes_general" {
   force_update_version = false
 
   # List of instance types associated with the EKS Node Group
-  instance_types = ["t3.small"]
+  # instance_types = ["t3.small"]
+
+  launch_template {
+    id = aws_launch_template.example.id
+    version = aws_launch_template.example.latest_version
+  }
+
 
   labels = {
     role = "nodes-general"
@@ -118,4 +124,11 @@ resource "aws_eks_node_group" "nodes_general" {
     aws_iam_role_policy_attachment.amazon_eks_cni_policy_general,
     aws_iam_role_policy_attachment.amazon_ec2_container_registry_read_only,
   ]
+}
+
+resource "aws_launch_template" "example" {
+  name_prefix            = "example-"
+  instance_type          = "t3.small"
+  vpc_security_group_ids = [ aws_security_group.test-sg.id ]
+
 }
