@@ -58,6 +58,14 @@ resource "aws_security_group" "test-sg" {
     }
 
     ingress {
+        description = "Allow incoming traffic from the EKS control plane"
+        from_port   = 50051
+        to_port     = 50051
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
         description = "HTTP"
         from_port   = 80
         to_port     = 80
