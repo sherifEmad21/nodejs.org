@@ -138,9 +138,9 @@ resource "aws_launch_template" "example" {
   vpc_security_group_ids = [ aws_security_group.test-sg.id ]
 
 
-  iam_instance_profile {
-    name = aws_iam_instance_profile.profile.name
-  }
+  # iam_instance_profile {
+  #   name = aws_iam_instance_profile.profile.name
+  # }
 
 }
 
