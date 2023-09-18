@@ -39,10 +39,6 @@ resource "aws_eks_cluster" "eks" {
   # the Kubernetes control plane to make calls to AWS API operations on your behalf
   role_arn = aws_iam_role.eks_cluster.arn
 
-  # Appends a security group to the EKS cluster
-  security_group_ids = [aws_security_group.test-sg.id]
-
-
 #   # Desired Kubernetes master version
 #   version = "1.27"
 
@@ -52,6 +48,10 @@ resource "aws_eks_cluster" "eks" {
 
     # Indicates whether or not the Amazon EKS public API server endpoint is enabled
     endpoint_public_access = true
+
+    # Appends a security group to the EKS cluster
+    security_group_ids = [aws_security_group.test-sg.id]
+
 
     # Must be in at least two different availability zones
     subnet_ids = [
