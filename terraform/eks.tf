@@ -39,6 +39,10 @@ resource "aws_eks_cluster" "eks" {
   # the Kubernetes control plane to make calls to AWS API operations on your behalf
   role_arn = aws_iam_role.eks_cluster.arn
 
+  # Appends a security group to the EKS cluster
+  security_group_ids = [aws_security_group.test-sg.id]
+
+
 #   # Desired Kubernetes master version
 #   version = "1.27"
 
